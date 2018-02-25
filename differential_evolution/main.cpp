@@ -68,6 +68,27 @@ double beale(double* x) {
      */
 }
 
+double booth(double* x) {
+    // f(1,3)=0
+    double t1 = pow((x[0] + 2*x[1] - 7), 2.0);
+    double t2 = pow(2*x[0] + x[1] - 5, 2.0);
+    return t1 + t2;
+}
+
+double matyas(double* x) {
+    // f(0,0)=0
+    double t1 = 0.26*(x[0]*x[0] + x[1]*x[1]);
+    double t2 = 0.48*x[0]*x[1];
+    return t1 - t2;
+}
+
+double himmelblau(double* x) {
+    // f(3,2)=0, f(-2.8051,3.1313)=0, f(-3.7793,-3.2831)=0, f(3.5844,-1.8481)=0
+    double t1 = pow(x[0]*x[0] + x[1] - 11, 2.0);
+    double t2 = pow(x[0] + x[1]*x[1] - 7, 2.0);
+    return t1 + t2;
+}
+
 void ensureBounds(double* vec, double** bounds, int params) {
     for (int i = 0; i < params; i++) {
         if (vec[i] < bounds[i][0]) vec[i] = bounds[i][0];
@@ -110,8 +131,8 @@ int main(int argc, const char * argv[]) {
     double** bounds = initBounds(params, -100.0, 100.0);
     const double mutate = 0.5;
     const double recombination = 0.7;
-    const int popsize = 1000;
-    const int maxGenerations = 10000;
+    const int popsize = 100;
+    const int maxGenerations = 1000;
     
     double** population = initPopulation(popsize, bounds, params);
     double* generationScores = new double[popsize];
@@ -158,8 +179,8 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = beale(trial);
-            double scoreTarget = beale(xt);
+            double scoreTrial = himmelblau(trial);
+            double scoreTarget = himmelblau(xt);
             
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
@@ -185,4 +206,5 @@ int main(int argc, const char * argv[]) {
         }
     }
     // Delete population
+    // Delete generationScores
 }
