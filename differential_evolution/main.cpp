@@ -106,15 +106,17 @@ double** initPopulation(int popsize, double** bounds, int params) {
 int main(int argc, const char * argv[]) {
     srand ((uint)time(NULL));
     
-    int params = 2;
+    const int params = 2;
     double** bounds = initBounds(params, -100.0, 100.0);
-    double mutate = 0.5;
-    double recombination = 0.7;
-    int popsize = 1000;
-    int maxGenerations = 10000;
+    const double mutate = 0.5;
+    const double recombination = 0.7;
+    const int popsize = 1000;
+    const int maxGenerations = 10000;
     
     double** population = initPopulation(popsize, bounds, params);
     double* generationScores = new double[popsize];
+    double donor[params];
+    double trial[params];
     
     // For each generation
     for (int g = 0; g < maxGenerations + 1; g++) {
@@ -140,32 +142,30 @@ int main(int argc, const char * argv[]) {
             double* xt = population[i];
             
             // Create donor
-            double* donor = new double[params];
             for (int j = 0; j < params; j++) {
                 donor[j] = x0[j] + (x1[j] - x2[j]) * mutate;
             }
             ensureBounds(donor, bounds, params);
             
             // Create trial
-            double* trial = new double[params];
-            for (int j = 0; j < params; j++) {
-                if (fRand(0.0, 1.0) < recombination) trial[j] = donor[j];
-                else trial[j] = xt[j];
-            }
             
-            // Donor no longer needed
-            delete[] donor;
+            for (int j = 0; j < params; j++) {
+                if (fRand(0.0, 1.0) < recombination) {
+                    trial[j] = donor[j];
+                }
+                else {
+                    trial[j] = xt[j];
+                }
+            }
             
             // Greedy pick best
             double scoreTrial = beale(trial);
             double scoreTarget = beale(xt);
             
             if (scoreTrial < scoreTarget) {
-                delete[] population[i];
-                population[i] = trial;
+                for (int j = 0; j < params; j++) population[i][j] = trial[j];
                 generationScores[i] = scoreTrial;
             } else {
-                delete[] trial;
                 generationScores[i] = scoreTarget;
             }
         }
@@ -185,4 +185,5 @@ int main(int argc, const char * argv[]) {
             std::cout << std::endl;
         }
     }
+    // Delete population
 }
