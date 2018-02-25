@@ -148,7 +148,6 @@ int main(int argc, const char * argv[]) {
             ensureBounds(donor, bounds, params);
             
             // Create trial
-            
             for (int j = 0; j < params; j++) {
                 if (fRand(0.0, 1.0) < recombination) {
                     trial[j] = donor[j];
