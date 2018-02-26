@@ -80,6 +80,17 @@ xy generatePoly(const double* coefficients,
     return xy(xs, ys);
 }
 
+double evaluateFitness(const double* coefficients, const int ncoefficients,
+                       const xy correctdata, const int ndatapoints) {
+    double error = 0.0;
+    for (int i = 0; i < ndatapoints; i++) {
+        double correct = correctdata.second[i];
+        double guess = horner(correctdata.first[i], coefficients, ncoefficients);
+        error += pow(correct-guess, 2.0);
+    }
+    return sqrt(error);
+}
+
 double beale(double* x) {
     // Beale's function, use bounds=[(-4.5, 4.5),(-4.5, 4.5)], f(3,0.5)=0.
     double term1 = pow(1.500 - x[0] + x[0]*x[1], 2.0);
@@ -149,10 +160,15 @@ int main(int argc, const char * argv[]) {
     coefficients[3] = 2.0;
     coefficients[4] = -9.0;
     
-    xy data = generatePoly(coefficients, ncoefficients, -5.0, 5.0, 10);
+    xy correctData = generatePoly(coefficients, ncoefficients, -5.0, 5.0, 10);
     
-    printArray(data.first, ndatapoints);
-    printArray(data.second, ndatapoints);
+    coefficients[0] += 1.0;
+    
+    double score = evaluateFitness(coefficients, ncoefficients,
+                                   correctData, ndatapoints);
+    
+    printArray(correctData.first, ndatapoints);
+    printArray(correctData.second, ndatapoints);
     
     
     const int params = 2;
