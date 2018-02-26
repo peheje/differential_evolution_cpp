@@ -8,7 +8,8 @@
 
 #include <iostream>
 #include <cmath>
-#include <assert.h>
+
+typedef std::pair<double*, double*> xy;
 
 void printArray(double* arr, int d1) {
     for (int i = 0; i < d1; i++) {
@@ -53,19 +54,38 @@ int iRand(int min, int max) {
     return rand() % (max - min) + min;
 }
 
+double horner(double x, const double* coeffs, int count) {
+    double result = 0.0;
+    for (int idx = count-1; idx >= 0; idx--)
+        result = fma(result, x, coeffs[idx]);
+    return result;
+}
+
+xy generatePoly(const double* coefficients,
+                const int ncoefficients,
+                const double from,
+                const double to,
+                const int ndatapoints) {
+    double* xs = new double[ndatapoints];
+    double* ys = new double[ndatapoints];
+    
+    double pos = from;
+    double stepsize = (to-from)/ndatapoints;
+    for (int i = 0; i < ndatapoints; i++) {
+        xs[i] = pos;
+        ys[i] = horner(pos, coefficients, ncoefficients);
+        pos += stepsize;
+    }
+    
+    return xy(xs, ys);
+}
+
 double beale(double* x) {
     // Beale's function, use bounds=[(-4.5, 4.5),(-4.5, 4.5)], f(3,0.5)=0.
     double term1 = pow(1.500 - x[0] + x[0]*x[1], 2.0);
     double term2 = pow(2.250 - x[0] + x[0]*x[1]*x[1], 2.0);
     double term3 = pow(2.625 - x[0] + x[0]*x[1]*x[1]*x[1], 2.0);
     return term1 + term2 + term3;
-    /*
-     double* d = new double[2];
-     d[0] = 3.0;
-     d[1] = 0.5;
-     double r = beale(d);
-     std::cout << r << std::endl;
-     */
 }
 
 double booth(double* x) {
@@ -94,13 +114,6 @@ void ensureBounds(double* vec, double** bounds, int params) {
         if (vec[i] < bounds[i][0]) vec[i] = bounds[i][0];
         else if (vec[i] > bounds[i][1]) vec[i] = bounds[i][1];
     }
-    /*
-     double* vec = new double[2];
-     vec[0] = -12.0;
-     vec[1] = 5.0;
-     ensureBounds(vec, bounds, params);
-     std::cout << vec[0] << " " << vec[1] << std::endl;
-     */
 }
 
 double** initBounds(int params, double low, double high) {
@@ -126,6 +139,21 @@ double** initPopulation(int popsize, double** bounds, int params) {
 
 int main(int argc, const char * argv[]) {
     srand ((uint)time(NULL));
+    
+    const int ndatapoints = 10;
+    const int ncoefficients = 5;
+    double coefficients[ncoefficients];
+    coefficients[0] = 1.5;
+    coefficients[1] = 9.0;
+    coefficients[2] = -7.0;
+    coefficients[3] = 2.0;
+    coefficients[4] = -9.0;
+    
+    xy data = generatePoly(coefficients, ncoefficients, -5.0, 5.0, 10);
+    
+    printArray(data.first, ndatapoints);
+    printArray(data.second, ndatapoints);
+    
     
     const int params = 2;
     double** bounds = initBounds(params, -100.0, 100.0);
