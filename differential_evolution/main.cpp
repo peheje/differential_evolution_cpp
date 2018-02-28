@@ -120,6 +120,23 @@ double himmelblau(double* x) {
     return t1 + t2;
 }
 
+double f1(double* c) {
+    // sqrt(3), x*x == 3 => x*x-3 = 0
+    // double t1 = c[0]*c[0] - 3;
+    // return abs(t1);
+    
+    // solve(2*x^2-x+4 == 0)
+    // return abs(2*c[0]*c[0] - c[0] - 4);
+    
+    // solve(2*x^4-3*y^3+2*y^2-x+1 == 0) where 0.2 < x < 0.4
+    double x = c[0];
+    double y = c[1];
+    double r = abs(2*pow(x, 4) - 3*pow(y, 3) + 2*pow(y, 2) - x + 1);
+    if (x < 0.2) r += 1;
+    else if (x > 0.4) r += 1;
+    return r;
+}
+
 void ensureBounds(double* vec, double** bounds, int params) {
     for (int i = 0; i < params; i++) {
         if (vec[i] < bounds[i][0]) vec[i] = bounds[i][0];
@@ -148,35 +165,41 @@ double** initPopulation(int popsize, double** bounds, int params) {
     return population;
 }
 
+void doStuff() {
+    /*
+     const int ndatapoints = 10;
+     const int ncoefficients = 5;
+     double coefficients[ncoefficients];
+     coefficients[0] = 1.5;
+     coefficients[1] = 9.0;
+     coefficients[2] = -7.0;
+     coefficients[3] = 2.0;
+     coefficients[4] = -9.0;
+     
+     xy correctData = generatePoly(coefficients, ncoefficients, -5.0, 5.0, 10);
+     
+     coefficients[0] += 1.0;
+     
+     double score = evaluateFitness(coefficients, ncoefficients,
+     correctData, ndatapoints);
+     
+     printArray(correctData.first, ndatapoints);
+     printArray(correctData.second, ndatapoints);
+     
+     */
+}
+
 int main(int argc, const char * argv[]) {
+    // Setup
+    std::cout.precision(17);
     srand ((uint)time(NULL));
-    
-    const int ndatapoints = 10;
-    const int ncoefficients = 5;
-    double coefficients[ncoefficients];
-    coefficients[0] = 1.5;
-    coefficients[1] = 9.0;
-    coefficients[2] = -7.0;
-    coefficients[3] = 2.0;
-    coefficients[4] = -9.0;
-    
-    xy correctData = generatePoly(coefficients, ncoefficients, -5.0, 5.0, 10);
-    
-    coefficients[0] += 1.0;
-    
-    double score = evaluateFitness(coefficients, ncoefficients,
-                                   correctData, ndatapoints);
-    
-    printArray(correctData.first, ndatapoints);
-    printArray(correctData.second, ndatapoints);
-    
     
     const int params = 2;
     double** bounds = initBounds(params, -100.0, 100.0);
     const double mutate = 0.5;
     const double recombination = 0.7;
-    const int popsize = 100;
-    const int maxGenerations = 1000;
+    const int popsize = 1000;
+    const int maxGenerations = 10000;
     
     double** population = initPopulation(popsize, bounds, params);
     double* generationScores = new double[popsize];
@@ -223,8 +246,8 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = himmelblau(trial);
-            double scoreTarget = himmelblau(xt);
+            double scoreTrial = f1(trial);
+            double scoreTarget = f1(xt);
             
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
