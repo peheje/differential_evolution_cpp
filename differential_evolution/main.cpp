@@ -9,7 +9,8 @@
 #include <iostream>
 #include <cmath>
 
-#define USE_XORSHIFT
+// XORSHIFT96 can not be used for bigger problems
+// #define USE_XORSHIFT
 
 typedef std::pair<double*, double*> xy;
 
@@ -155,14 +156,38 @@ double himmelblau(double* x) {
     return t1 + t2;
 }
 
-double f1(double* c) {
+double f1(double* c, int params) {
     
     // f1
+    /*
     double s = 0.0;
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < params; i++) {
         s += c[i]*c[i];
     }
-    return s;
+    return abs(s);
+    */
+    
+    // f2
+    /*
+    double s = 0.0;
+    double p = 1.0;
+    for (int i = 0; i < params; i++) {
+        s += abs(c[i]);
+        p *= c[i];
+    }
+    return abs(s) + abs(p);
+    */
+    
+    // f3
+    double s = 0.0;
+    for (int i = 0; i < params; i++) {
+        double is = 0.0;
+        for (int j = 0; j <= i; j++) {
+            is += c[i];
+        }
+        s += is*is;
+    }
+    return abs(s);
     
     // sqrt(2), x*x == 2 => x*x-2 = 0
     /*
@@ -241,12 +266,12 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 30;
+    const int params = 100;
     double** bounds = initBounds(params, -10.0, 10.0);
-    const double mutate = 0.5;
-    const double recombination = 0.7;
-    const int popsize = 1000;
-    const int maxGenerations = 25000;
+    const double scale = 0.5;
+    const double crossover = 0.9;
+    const int popsize = 100;
+    const int maxGenerations = 100000;
     const int print = 1000;
     
     double** population = initPopulation(popsize, bounds, params);
@@ -276,13 +301,13 @@ int main(int argc, const char * argv[]) {
             
             // Create donor
             for (int j = 0; j < params; j++) {
-                donor[j] = x0[j] + (x1[j] - x2[j]) * mutate;
+                donor[j] = x0[j] + (x1[j] - x2[j]) * scale;
             }
             // ensureBounds(donor, bounds, params);
             
             // Create trial
             for (int j = 0; j < params; j++) {
-                if (fRand(0.0, 1.0) < recombination) {
+                if (fRand(0.0, 1.0) < crossover) {
                     trial[j] = donor[j];
                 }
                 else {
@@ -291,8 +316,8 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = f1(trial);
-            double scoreTarget = f1(xt);
+            double scoreTrial = f1(trial, params);
+            double scoreTarget = f1(xt, params);
             
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
