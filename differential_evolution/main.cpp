@@ -9,37 +9,35 @@
 #include <iostream>
 #include <cmath>
 
-// XORSHIFT96 can not be used for bigger problems
-// #define USE_XORSHIFT
+#define USE_XORSHIFT
 
 typedef std::pair<double*, double*> xy;
 
 #ifdef USE_XORSHIFT
 
-// https://stackoverflow.com/questions/1640258/need-a-fast-random-generator-for-c
-static unsigned long x = 123456789, y = 362436069, z = 521288629;
-
-unsigned long xorshift96() {          //period 2^96-1
-    unsigned long t;
-    x ^= x << 16;
-    x ^= x >> 5;
-    x ^= x << 1;
-    t = x;
-    x = y;
-    y = z;
-    z = t ^ x ^ y;
-    return z;
+// https://stackoverflow.com/questions/23376925/generating-doubles-with-xorshift-generator
+uint32_t xor128() {
+    static uint32_t x = 123456789;
+    static uint32_t y = 362436069;
+    static uint32_t z = 521288629;
+    static uint32_t w = 88675123;
+    uint32_t t;
+    t = x ^ (x << 11);
+    x = y; y = z; z = w;
+    return w = w ^ (w >> 19) ^ t ^ (t >> 8);
 }
 
 double fRand(double min, double max) {
-    double r = (double) xorshift96();
-    // pow(2, 96) == 7.922816251E28
-    double rr = (r / 7.922816251E28);
-    return rr * (max - min) + min;
+    double r = (double) xor128();
+    // pow(2, 32) - 1 == 4294967295
+    double rr = (r / 4294967295.0);
+    double rrr = rr * (max - min) + min;
+    return rrr;
 }
 
 unsigned long iRand(unsigned long min, unsigned long max) {
-    return (xorshift96() + min) % max;
+    unsigned long r = (xor128() + min) % max;
+    return r;
 }
 
 #else
@@ -179,6 +177,7 @@ double f1(double* c, int params) {
     */
     
     // f3
+    
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         double is = 0.0;
@@ -189,6 +188,16 @@ double f1(double* c, int params) {
     }
     return abs(s);
     
+     
+    // f8
+    /*
+    double s = 0.0;
+    for (int i = 0; i < params; i++) {
+        s += -c[i] * sin(sqrt(abs(c[i])));
+    }
+    return abs(s);
+    */
+    
     // sqrt(2), x*x == 2 => x*x-2 = 0
     /*
     double x = c[0];
@@ -196,17 +205,21 @@ double f1(double* c, int params) {
     return abs(t1);
     */
     
-    // solve(2*x^2-x-4 == 0)
-    // double t1 = abs(2*c[0]*c[0] - c[0] - 4);
-    // return t1;
-    
+    /*
+    solve(2*x^2-x-4 == 0)
+    double t1 = abs(2*c[0]*c[0] - c[0] - 4);
+    return t1;
+    */
+     
     // solve(2*x^4-3*y^3+2*y^2-x+1 == 0) where 0.2 < x < 0.4
-    // double x = c[0];
-    // double y = c[1];
-    // double r = abs(2*pow(x, 4) - 3*pow(y, 3) + 2*pow(y, 2) - x + 1);
-    // if (x < 0.2) r += 1;
-    // else if (x > 0.4) r += 1;
-    // return r;
+    /*
+    double x = c[0];
+    double y = c[1];
+    double r = abs(2*pow(x, 4) - 3*pow(y, 3) + 2*pow(y, 2) - x + 1);
+    if (x < 0.2) r += 1;
+    else if (x > 0.4) r += 1;
+    return r;
+     */
 }
 
 void ensureBounds(double* vec, double** bounds, int params) {
@@ -267,10 +280,10 @@ int main(int argc, const char * argv[]) {
     srand ((uint)time(NULL));
     
     const int params = 100;
-    double** bounds = initBounds(params, -10.0, 10.0);
+    double** bounds = initBounds(params, -500.0, 500.0);
     const double scale = 0.5;
     const double crossover = 0.9;
-    const int popsize = 100;
+    const int popsize = 200;
     const int maxGenerations = 100000;
     const int print = 1000;
     
