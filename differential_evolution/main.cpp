@@ -8,15 +8,16 @@
 
 #include <iostream>
 #include <cmath>
-#include <random>
 
 #define USE_XORSHIFT
 
 typedef std::pair<double*, double*> xy;
 
 #ifdef USE_XORSHIFT
+
 // https://stackoverflow.com/questions/1640258/need-a-fast-random-generator-for-c
 static unsigned long x = 123456789, y = 362436069, z = 521288629;
+
 unsigned long xorshift96() {          //period 2^96-1
     unsigned long t;
     x ^= x << 16;
@@ -28,16 +29,20 @@ unsigned long xorshift96() {          //period 2^96-1
     z = t ^ x ^ y;
     return z;
 }
+
 double fRand(double min, double max) {
     double r = (double) xorshift96();
     // pow(2, 96) == 7.922816251E28
     double rr = (r / 7.922816251E28);
     return rr * (max - min) + min;
 }
+
 unsigned long iRand(unsigned long min, unsigned long max) {
     return (xorshift96() + min) % max;
 }
+
 #else
+
 double fRand(double fMin, double fMax) {
     double f = (double)rand() / RAND_MAX;
     return fMin + f * (fMax - fMin);
@@ -46,8 +51,8 @@ double fRand(double fMin, double fMax) {
 int iRand(int min, int max) {
     return rand() % (max - min) + min;
 }
-#endif
 
+#endif
 
 void printArray(double* arr, int d1) {
     for (int i = 0; i < d1; i++) {
@@ -151,14 +156,13 @@ double himmelblau(double* x) {
 
 double f1(double* c) {
     // sqrt(2), x*x == 2 => x*x-2 = 0
-    // double x = c[0];
-    // double t1 = x*x - 2;
-    // return abs(t1);
+    double x = c[0];
+    double t1 = x*x - 2;
+    return abs(t1);
     
     // solve(2*x^2-x-4 == 0)
-    double t1 = abs(2*c[0]*c[0] - c[0] - 4);
-    if (t1 < 0) t1 += 100.0;
-    return t1;
+    // double t1 = abs(2*c[0]*c[0] - c[0] - 4);
+    // return t1;
     
     // solve(2*x^4-3*y^3+2*y^2-x+1 == 0) where 0.2 < x < 0.4
     // double x = c[0];
@@ -230,8 +234,8 @@ int main(int argc, const char * argv[]) {
     double** bounds = initBounds(params, -10.0, 10.0);
     const double mutate = 0.5;
     const double recombination = 0.7;
-    const int popsize = 10000;
-    const int maxGenerations = 10000;
+    const int popsize = 1000;
+    const int maxGenerations = 25000;
     const int print = 1000;
     
     double** population = initPopulation(popsize, bounds, params);
@@ -276,8 +280,8 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = himmelblau(trial);
-            double scoreTarget = himmelblau(xt);
+            double scoreTrial = booth(trial);
+            double scoreTarget = booth(xt);
             
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
