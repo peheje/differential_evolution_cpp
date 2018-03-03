@@ -6,10 +6,48 @@
 //  Copyright © 2018 Peter Helstrup Jensen. All rights reserved.
 //
 
+#define USE_XORSHIFT
+
 #include <iostream>
 #include <cmath>
+#include <random>
 
 typedef std::pair<double*, double*> xy;
+
+#ifdef USE_XORSHIFT
+// https://stackoverflow.com/questions/1640258/need-a-fast-random-generator-for-c
+static unsigned long x = 123456789, y = 362436069, z = 521288629;
+unsigned long xorshift96() {          //period 2^96-1
+    unsigned long t;
+    x ^= x << 16;
+    x ^= x >> 5;
+    x ^= x << 1;
+    t = x;
+    x = y;
+    y = z;
+    z = t ^ x ^ y;
+    return z;
+}
+double fRand(double min, double max) {
+    double r = (double) xorshift96();
+    // pow(2, 96) == 7.922816251E28
+    double rr = (r / 7.922816251E28);
+    return rr * (max - min) + min;
+}
+unsigned long iRand(unsigned long min, unsigned long max) {
+    return (xorshift96() + min) % max;
+}
+#else
+double fRand(double fMin, double fMax) {
+    double f = (double)rand() / RAND_MAX;
+    return fMin + f * (fMax - fMin);
+}
+
+int iRand(int min, int max) {
+    return rand() % (max - min) + min;
+}
+#endif
+
 
 void printArray(double* arr, int d1) {
     for (int i = 0; i < d1; i++) {
@@ -43,15 +81,6 @@ int arrayMinIndex(double* arr, int d1) {
         }
     }
     return idx;
-}
-
-double fRand(double fMin, double fMax) {
-    double f = (double)rand() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
-}
-
-int iRand(int min, int max) {
-    return rand() % (max - min) + min;
 }
 
 double horner(double x, const double* coeffs, int count) {
@@ -121,20 +150,23 @@ double himmelblau(double* x) {
 }
 
 double f1(double* c) {
-    // sqrt(3), x*x == 3 => x*x-3 = 0
-    // double t1 = c[0]*c[0] - 3;
+    // sqrt(2), x*x == 2 => x*x-2 = 0
+    // double x = c[0];
+    // double t1 = x*x - 2;
     // return abs(t1);
     
-    // solve(2*x^2-x+4 == 0)
-    // return abs(2*c[0]*c[0] - c[0] - 4);
+    // solve(2*x^2-x-4 == 0)
+    double t1 = abs(2*c[0]*c[0] - c[0] - 4);
+    if (t1 < 0) t1 += 100.0;
+    return t1;
     
     // solve(2*x^4-3*y^3+2*y^2-x+1 == 0) where 0.2 < x < 0.4
-    double x = c[0];
-    double y = c[1];
-    double r = abs(2*pow(x, 4) - 3*pow(y, 3) + 2*pow(y, 2) - x + 1);
-    if (x < 0.2) r += 1;
-    else if (x > 0.4) r += 1;
-    return r;
+    // double x = c[0];
+    // double y = c[1];
+    // double r = abs(2*pow(x, 4) - 3*pow(y, 3) + 2*pow(y, 2) - x + 1);
+    // if (x < 0.2) r += 1;
+    // else if (x > 0.4) r += 1;
+    // return r;
 }
 
 void ensureBounds(double* vec, double** bounds, int params) {
@@ -195,11 +227,12 @@ int main(int argc, const char * argv[]) {
     srand ((uint)time(NULL));
     
     const int params = 2;
-    double** bounds = initBounds(params, -100.0, 100.0);
+    double** bounds = initBounds(params, -10.0, 10.0);
     const double mutate = 0.5;
     const double recombination = 0.7;
-    const int popsize = 1000;
+    const int popsize = 10000;
     const int maxGenerations = 10000;
+    const int print = 1000;
     
     double** population = initPopulation(popsize, bounds, params);
     double* generationScores = new double[popsize];
@@ -209,9 +242,6 @@ int main(int argc, const char * argv[]) {
     // For each generation
     for (int g = 0; g < maxGenerations + 1; g++) {
         
-        // Reset generationScores
-        for (int i = 0; i < popsize; i++) generationScores[i] = 0.0;
-        
         // For each individual
         for (int i = 0; i < popsize; i++) {
             
@@ -220,7 +250,7 @@ int main(int argc, const char * argv[]) {
             for (int j = 0; j < 3; j++) {
                 int idx = 0;
                 do {
-                    idx = iRand(0, popsize);
+                    idx = (int)iRand(0, popsize);
                 } while (idx == i); // Should check for candidates contains
                 candidates[j] = idx;
             }
@@ -233,7 +263,7 @@ int main(int argc, const char * argv[]) {
             for (int j = 0; j < params; j++) {
                 donor[j] = x0[j] + (x1[j] - x2[j]) * mutate;
             }
-            ensureBounds(donor, bounds, params);
+            // ensureBounds(donor, bounds, params);
             
             // Create trial
             for (int j = 0; j < params; j++) {
@@ -246,8 +276,8 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = f1(trial);
-            double scoreTarget = f1(xt);
+            double scoreTrial = himmelblau(trial);
+            double scoreTarget = himmelblau(xt);
             
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
@@ -257,7 +287,7 @@ int main(int argc, const char * argv[]) {
             }
         }
         
-        if (g % 1000 == 0) {
+        if (g % print == 0) {
             // Score keeping
             double genAvg = arraySum(generationScores, popsize) / popsize;
             int idxOfMin = arrayMinIndex(generationScores, popsize);
