@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <cmath>
+#include <iostream>
+#include <fstream>
 
 #define USE_XORSHIFT
 
@@ -118,13 +120,13 @@ double himmelblau(double* x) {
 double f1(double* c, int params) {
     
     // f1
-    
+    /*
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         s += c[i]*c[i];
     }
     return abs(s);
-    
+    */
     
     // f2
     /*
@@ -149,6 +151,15 @@ double f1(double* c, int params) {
     }
     return abs(s);
     */
+    
+    // f5
+    double s = 0.0;
+    for (int i = 0; i < params-1; i++) {
+        double t1 = 100*pow(c[i + 1] - c[i]*c[i], 2);
+        double t2 = pow(c[i] - 1, 2);
+        s += t1 + t2;
+    }
+    return abs(s);
      
     // f8
     /*
@@ -216,7 +227,7 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 1000;
+    const int params = 100;
     double** bounds = initBounds(params, -500.0, 500.0);
     const double scale = 0.3;
     const double crossover = 0.9;
@@ -229,6 +240,9 @@ int main(int argc, const char * argv[]) {
     double donor[params];
     double trial[params];
     
+    std::ofstream xydata;
+    xydata.open("/Users/phj/Desktop/data.txt");
+    
     // For each generation
     for (int g = 0; g < generations + 1; g++) {
         
@@ -238,7 +252,7 @@ int main(int argc, const char * argv[]) {
             // Get three others
             int candidates[3];
             for (int j = 0; j < 3; j++) {
-                int idx = 0;
+                int idx;
                 do {
                     idx = (int)iRand(0, popsize);
                 } while (idx == i); // Should check for candidates contains
@@ -292,8 +306,13 @@ int main(int argc, const char * argv[]) {
             std::cout << "average " << genAvg << std::endl;
             std::cout << "best " << genBest << std::endl;
             std::cout << std::endl;
+            
+            // Write to file
+            std::string data = std::to_string(g) + " " + std::to_string(genAvg) + "\n";
+            xydata << data;
         }
     }
+    xydata.close();
     // Delete population
     // Delete generationScores
 }
