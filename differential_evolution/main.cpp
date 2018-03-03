@@ -6,11 +6,11 @@
 //  Copyright © 2018 Peter Helstrup Jensen. All rights reserved.
 //
 
-#define USE_XORSHIFT
-
 #include <iostream>
 #include <cmath>
 #include <random>
+
+#define USE_XORSHIFT
 
 typedef std::pair<double*, double*> xy;
 
