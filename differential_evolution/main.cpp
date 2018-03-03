@@ -157,13 +157,13 @@ double himmelblau(double* x) {
 double f1(double* c, int params) {
     
     // f1
-    /*
+    
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         s += c[i]*c[i];
     }
     return abs(s);
-    */
+    
     
     // f2
     /*
@@ -177,7 +177,7 @@ double f1(double* c, int params) {
     */
     
     // f3
-    
+    /*
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         double is = 0.0;
@@ -187,7 +187,7 @@ double f1(double* c, int params) {
         s += is*is;
     }
     return abs(s);
-    
+    */
      
     // f8
     /*
@@ -279,13 +279,13 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 100;
+    const int params = 5000;
     double** bounds = initBounds(params, -500.0, 500.0);
-    const double scale = 0.5;
+    const double scale = 0.3;
     const double crossover = 0.9;
-    const int popsize = 200;
-    const int maxGenerations = 100000;
-    const int print = 1000;
+    const int popsize = 500;
+    const int generations = 10000;
+    const int print = 100;
     
     double** population = initPopulation(popsize, bounds, params);
     double* generationScores = new double[popsize];
@@ -293,7 +293,7 @@ int main(int argc, const char * argv[]) {
     double trial[params];
     
     // For each generation
-    for (int g = 0; g < maxGenerations + 1; g++) {
+    for (int g = 0; g < generations + 1; g++) {
         
         // For each individual
         for (int i = 0; i < popsize; i++) {
@@ -348,10 +348,13 @@ int main(int argc, const char * argv[]) {
             double* genSolution = population[idxOfMin];
             
             std::cout << "iteration " << g << std::endl;
+            
+            if (g == generations) {
+                std::cout << "solution "; printArray(genSolution, params, true);
+            }
+            
             std::cout << "average " << genAvg << std::endl;
             std::cout << "best " << genBest << std::endl;
-            std::cout << "solution ";
-            printArray(genSolution, params, true);
             std::cout << std::endl;
         }
     }
