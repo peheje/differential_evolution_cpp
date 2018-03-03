@@ -54,9 +54,10 @@ int iRand(int min, int max) {
 
 #endif
 
-void printArray(double* arr, int d1) {
+void printArray(double* arr, int d1, bool newline) {
     for (int i = 0; i < d1; i++) {
         std::cout << arr[i] << ' ';
+        if (newline) std::cout << std::endl;
     }
     std::cout << std::endl;
 }
@@ -155,10 +156,20 @@ double himmelblau(double* x) {
 }
 
 double f1(double* c) {
+    
+    // f1
+    double s = 0.0;
+    for (int i = 0; i < 30; i++) {
+        s += c[i]*c[i];
+    }
+    return s;
+    
     // sqrt(2), x*x == 2 => x*x-2 = 0
+    /*
     double x = c[0];
     double t1 = x*x - 2;
     return abs(t1);
+    */
     
     // solve(2*x^2-x-4 == 0)
     // double t1 = abs(2*c[0]*c[0] - c[0] - 4);
@@ -230,7 +241,7 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 2;
+    const int params = 30;
     double** bounds = initBounds(params, -10.0, 10.0);
     const double mutate = 0.5;
     const double recombination = 0.7;
@@ -280,8 +291,8 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = booth(trial);
-            double scoreTarget = booth(xt);
+            double scoreTrial = f1(trial);
+            double scoreTarget = f1(xt);
             
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
@@ -302,7 +313,7 @@ int main(int argc, const char * argv[]) {
             std::cout << "average " << genAvg << std::endl;
             std::cout << "best " << genBest << std::endl;
             std::cout << "solution ";
-            printArray(genSolution, params);
+            printArray(genSolution, params, true);
             std::cout << std::endl;
         }
     }
