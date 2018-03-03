@@ -11,8 +11,6 @@
 
 #define USE_XORSHIFT
 
-typedef std::pair<double*, double*> xy;
-
 #ifdef USE_XORSHIFT
 
 // https://stackoverflow.com/questions/23376925/generating-doubles-with-xorshift-generator
@@ -86,43 +84,6 @@ int arrayMinIndex(double* arr, int d1) {
         }
     }
     return idx;
-}
-
-double horner(double x, const double* coeffs, int count) {
-    double result = 0.0;
-    for (int idx = count-1; idx >= 0; idx--)
-        result = fma(result, x, coeffs[idx]);
-    return result;
-}
-
-xy generatePoly(const double* coefficients,
-                const int ncoefficients,
-                const double from,
-                const double to,
-                const int ndatapoints) {
-    double* xs = new double[ndatapoints];
-    double* ys = new double[ndatapoints];
-    
-    double pos = from;
-    double stepsize = (to-from)/ndatapoints;
-    for (int i = 0; i < ndatapoints; i++) {
-        xs[i] = pos;
-        ys[i] = horner(pos, coefficients, ncoefficients);
-        pos += stepsize;
-    }
-    
-    return xy(xs, ys);
-}
-
-double evaluateFitness(const double* coefficients, const int ncoefficients,
-                       const xy correctdata, const int ndatapoints) {
-    double error = 0.0;
-    for (int i = 0; i < ndatapoints; i++) {
-        double correct = correctdata.second[i];
-        double guess = horner(correctdata.first[i], coefficients, ncoefficients);
-        error += pow(correct-guess, 2.0);
-    }
-    return sqrt(error);
 }
 
 double beale(double* x) {
@@ -250,40 +211,16 @@ double** initPopulation(int popsize, double** bounds, int params) {
     return population;
 }
 
-void doStuff() {
-    /*
-     const int ndatapoints = 10;
-     const int ncoefficients = 5;
-     double coefficients[ncoefficients];
-     coefficients[0] = 1.5;
-     coefficients[1] = 9.0;
-     coefficients[2] = -7.0;
-     coefficients[3] = 2.0;
-     coefficients[4] = -9.0;
-     
-     xy correctData = generatePoly(coefficients, ncoefficients, -5.0, 5.0, 10);
-     
-     coefficients[0] += 1.0;
-     
-     double score = evaluateFitness(coefficients, ncoefficients,
-     correctData, ndatapoints);
-     
-     printArray(correctData.first, ndatapoints);
-     printArray(correctData.second, ndatapoints);
-     
-     */
-}
-
 int main(int argc, const char * argv[]) {
     // Setup
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 5000;
+    const int params = 1000;
     double** bounds = initBounds(params, -500.0, 500.0);
     const double scale = 0.3;
     const double crossover = 0.9;
-    const int popsize = 500;
+    const int popsize = 2000;
     const int generations = 10000;
     const int print = 100;
     
@@ -322,8 +259,7 @@ int main(int argc, const char * argv[]) {
             for (int j = 0; j < params; j++) {
                 if (fRand(0.0, 1.0) < crossover) {
                     trial[j] = donor[j];
-                }
-                else {
+                } else {
                     trial[j] = xt[j];
                 }
             }
