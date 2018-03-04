@@ -118,6 +118,7 @@ double himmelblau(double* x) {
 }
 
 double f1(double* c, int params) {
+    // f1(0) = 0
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         s += c[i]*c[i];
@@ -126,6 +127,7 @@ double f1(double* c, int params) {
 }
 
 double f2(double* c, int params) {
+    // f2(0) = 0
     double s = 0.0;
     double p = 1.0;
     for (int i = 0; i < params; i++) {
@@ -136,6 +138,7 @@ double f2(double* c, int params) {
 }
 
 double f3(double* c, int params) {
+    // f3(0) = 0
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         double is = 0.0;
@@ -148,6 +151,7 @@ double f3(double* c, int params) {
 }
 
 double f5(double* c, int params) {
+    // f5(1) = 0
     double s = 0.0;
     for (int i = 0; i < params-1; i++) {
         double t1 = 100*pow(c[i + 1] - c[i]*c[i], 2);
@@ -158,11 +162,22 @@ double f5(double* c, int params) {
 }
 
 double f8(double* c, int params) {
+    // f8(420.97) = 12569.5/41898.3 = 0.3000002387
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         s += -c[i] * sin(sqrt(abs(c[i])));
     }
     return abs(s);
+}
+
+double f17(double* c) {
+    // f17(9.42, 2.47) = 0.398
+    // -5 <= xi <= 15
+    double x0 = c[0];
+    double x1 = c[1];
+    double t1 = pow(x1 - (5.1/(4*M_PI*M_PI))*x0*x0 + (5.0/M_PI)*x0 - 6.0, 2.0);
+    double t2 = 10.0*(1.0 - (1.0/(8.0*M_PI))) * cos(x0) + 10.0;
+    return abs(t1 + t2);
 }
 
 double calcSqrt(double* c, int params) {
@@ -173,7 +188,7 @@ double calcSqrt(double* c, int params) {
 }
 
 double optimize(double* c, int params) {
-    return f1(c, params);
+    return f17(c);
 }
 
 void ensureBounds(double* vec, double** bounds, int params) {
@@ -209,14 +224,14 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 100;
-    double** bounds = initBounds(params, -100.0, 100.0);
+    const int params = 2;
     const double scale = 0.3;
     const double crossover = 0.9;
     const int popsize = 1000;
-    const int generations = 10000;
-    const int print = 100;
+    const int generations = 1000;
+    const int print = 2;
     
+    double** bounds = initBounds(params, -5.0, 15.0);
     double** population = initPopulation(popsize, bounds, params);
     double* scores = new double[popsize];
     double donor[params];
