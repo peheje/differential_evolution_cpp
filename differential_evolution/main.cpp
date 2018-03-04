@@ -187,7 +187,7 @@ double calcSqrt(double* c, int params) {
 }
 
 double optimize(double* c, int params) {
-    return f17(c);
+    return f2(c, params);
 }
 
 void ensureBounds(double* vec, double** bounds, int params) {
@@ -223,14 +223,14 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 2;
+    const int params = 100;
     const double scale = 0.3;
     const double crossover = 0.9;
     const int popsize = 1000;
-    const int generations = 1000;
-    const int print = 2;
+    const int generations = 10000;
+    const int print = 1000;
     
-    double** bounds = initBounds(params, -5.0, 15.0);
+    double** bounds = initBounds(params, -100.0, 100.0);
     double** population = initPopulation(popsize, bounds, params);
     double* scores = new double[popsize];
     double donor[params];
@@ -286,8 +286,6 @@ int main(int argc, const char * argv[]) {
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
                 scores[i] = scoreTrial;
-            } else {
-                scores[i] = scoreTarget;
             }
         }
         
