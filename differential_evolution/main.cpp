@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <cmath>
-#include <iostream>
 #include <fstream>
 
 #define USE_XORSHIFT
