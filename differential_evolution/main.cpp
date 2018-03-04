@@ -118,18 +118,14 @@ double himmelblau(double* x) {
 }
 
 double f1(double* c, int params) {
-    
-    // f1
-    /*
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         s += c[i]*c[i];
     }
     return abs(s);
-    */
-    
-    // f2
-    /*
+}
+
+double f2(double* c, int params) {
     double s = 0.0;
     double p = 1.0;
     for (int i = 0; i < params; i++) {
@@ -137,10 +133,9 @@ double f1(double* c, int params) {
         p *= c[i];
     }
     return abs(s) + abs(p);
-    */
-    
-    // f3
-    /*
+}
+
+double f3(double* c, int params) {
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         double is = 0.0;
@@ -150,9 +145,9 @@ double f1(double* c, int params) {
         s += is*is;
     }
     return abs(s);
-    */
-    
-    // f5
+}
+
+double f5(double* c, int params) {
     double s = 0.0;
     for (int i = 0; i < params-1; i++) {
         double t1 = 100*pow(c[i + 1] - c[i]*c[i], 2);
@@ -160,38 +155,25 @@ double f1(double* c, int params) {
         s += t1 + t2;
     }
     return abs(s);
-     
-    // f8
-    /*
+}
+
+double f8(double* c, int params) {
     double s = 0.0;
     for (int i = 0; i < params; i++) {
         s += -c[i] * sin(sqrt(abs(c[i])));
     }
     return abs(s);
-    */
-    
+}
+
+double calcSqrt(double* c, int params) {
     // sqrt(2), x*x == 2 => x*x-2 = 0
-    /*
     double x = c[0];
     double t1 = x*x - 2;
     return abs(t1);
-    */
-    
-    /*
-    solve(2*x^2-x-4 == 0)
-    double t1 = abs(2*c[0]*c[0] - c[0] - 4);
-    return t1;
-    */
-     
-    // solve(2*x^4-3*y^3+2*y^2-x+1 == 0) where 0.2 < x < 0.4
-    /*
-    double x = c[0];
-    double y = c[1];
-    double r = abs(2*pow(x, 4) - 3*pow(y, 3) + 2*pow(y, 2) - x + 1);
-    if (x < 0.2) r += 1;
-    else if (x > 0.4) r += 1;
-    return r;
-     */
+}
+
+double optimize(double* c, int params) {
+    return f1(c, params);
 }
 
 void ensureBounds(double* vec, double** bounds, int params) {
@@ -228,20 +210,25 @@ int main(int argc, const char * argv[]) {
     srand ((uint)time(NULL));
     
     const int params = 100;
-    double** bounds = initBounds(params, -500.0, 500.0);
+    double** bounds = initBounds(params, -100.0, 100.0);
     const double scale = 0.3;
     const double crossover = 0.9;
-    const int popsize = 2000;
+    const int popsize = 1000;
     const int generations = 10000;
     const int print = 100;
     
     double** population = initPopulation(popsize, bounds, params);
-    double* generationScores = new double[popsize];
+    double* scores = new double[popsize];
     double donor[params];
     double trial[params];
     
     std::ofstream xydata;
     xydata.open("/Users/phj/Desktop/data.txt");
+    
+    // Run initial generation scores
+    for (int i = 0; i < popsize; i++) {
+        scores[i] = optimize(population[i], params);
+    }
     
     // For each generation
     for (int g = 0; g < generations + 1; g++) {
@@ -279,22 +266,22 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = f1(trial, params);
-            double scoreTarget = f1(xt, params);
+            double scoreTrial = optimize(trial, params);
+            double scoreTarget = scores[i];
             
             if (scoreTrial < scoreTarget) {
                 for (int j = 0; j < params; j++) population[i][j] = trial[j];
-                generationScores[i] = scoreTrial;
+                scores[i] = scoreTrial;
             } else {
-                generationScores[i] = scoreTarget;
+                scores[i] = scoreTarget;
             }
         }
         
         if (g % print == 0) {
             // Score keeping
-            double genAvg = arraySum(generationScores, popsize) / popsize;
-            int idxOfMin = arrayMinIndex(generationScores, popsize);
-            double genBest = generationScores[idxOfMin];
+            double genAvg = arraySum(scores, popsize) / popsize;
+            int idxOfMin = arrayMinIndex(scores, popsize);
+            double genBest = scores[idxOfMin];
             double* genSolution = population[idxOfMin];
             
             std::cout << "iteration " << g << std::endl;
@@ -315,4 +302,5 @@ int main(int argc, const char * argv[]) {
     xydata.close();
     // Delete population
     // Delete generationScores
+    // Delete scores
 }
