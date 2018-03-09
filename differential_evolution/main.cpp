@@ -9,7 +9,10 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include <array>
 
+#define POPSIZE 1000
+#define PARAMS 10
 #define USE_XORSHIFT
 
 #ifdef USE_XORSHIFT
@@ -116,7 +119,7 @@ double himmelblau(double* x) {
     return t1 + t2;
 }
 
-double f1(double* c, int params) {
+double f1(std::array<double, PARAMS> c, int params) {
     // f1(0) = 0
     double s = 0.0;
     for (int i = 0; i < params; i++) {
@@ -186,7 +189,7 @@ double calcSqrt(double* c, int params) {
     return abs(t1);
 }
 
-double optimize(double* c, int params) {
+double optimize(std::array<double, PARAMS> c, const int params) {
     return f1(c, params);
 }
 
@@ -207,10 +210,11 @@ double** initBounds(int params, double low, double high) {
     return bounds;
 }
 
-double** initPopulation(const int popsize, double** bounds, int params) {
-    double** population = new double*[popsize];
+std::array<std::array<double, PARAMS>, POPSIZE> initPopulation(const int popsize, double** bounds, const int params) {
+    // double** population = new double*[popsize];
+    std::array<std::array<double, PARAMS>, POPSIZE> population;
     for (int i = 0; i < popsize; i++) {
-        population[i] = new double[params];
+        // population[i] = new double[params];
         for (int j = 0; j < params; j++) {
             population[i][j] = fRand(bounds[j][0], bounds[j][1]);
         }
@@ -231,10 +235,10 @@ int main(int argc, const char * argv[]) {
     const int print = 1000;
     
     double** bounds = initBounds(params, -100.0, 100.0);
-    double** population = initPopulation(popsize, bounds, params);
+    std::array<std::array<double, PARAMS>, POPSIZE> population = initPopulation(popsize, bounds, params);
     double scores[popsize];
     double donor[params];
-    double trial[params];
+    std::array<double, PARAMS> trial;
     
     std::ofstream xydata;
     xydata.open("/Users/phj/Desktop/data.txt");
@@ -259,10 +263,10 @@ int main(int argc, const char * argv[]) {
                 } while (idx == i); // Should check for candidates contains
                 candidates[j] = idx;
             }
-            double* x0 = population[candidates[0]];
-            double* x1 = population[candidates[1]];
-            double* x2 = population[candidates[2]];
-            double* xt = population[i];
+            std::array<double, PARAMS> x0 = population[candidates[0]];
+            std::array<double, PARAMS> x1 = population[candidates[1]];
+            std::array<double, PARAMS> x2 = population[candidates[2]];
+            std::array<double, PARAMS> xt = population[i];
             
             // Create donor
             for (int j = 0; j < params; j++) {
@@ -294,12 +298,14 @@ int main(int argc, const char * argv[]) {
             double genAvg = arraySum(scores, popsize) / popsize;
             int idxOfMin = arrayMinIndex(scores, popsize);
             double genBest = scores[idxOfMin];
-            double* genSolution = population[idxOfMin];
+            std::array<double, PARAMS> genSolution = population[idxOfMin];
             
             std::cout << "iteration " << g << std::endl;
             
             if (g == generations) {
-                std::cout << "solution "; printArray(genSolution, params, true);
+                for(const auto& s: genSolution)
+                    std::cout << s << ' ' << std::endl;
+                // std::cout << "solution "; printArray(genSolution, params, true);
             }
             
             std::cout << "average " << genAvg << std::endl;
