@@ -12,7 +12,7 @@
 #include <array>
 
 #define POPSIZE 1000
-#define PARAMS 10
+#define PARAMS 1000
 #define USE_XORSHIFT
 
 #ifdef USE_XORSHIFT
