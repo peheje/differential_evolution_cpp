@@ -17,6 +17,8 @@
 
 #ifdef USE_XORSHIFT
 
+typedef std::array<double, PARAMS> individual;
+
 // https://stackoverflow.com/questions/23376925/generating-doubles-with-xorshift-generator
 uint32_t xor128() {
     static uint32_t x = 123456789;
@@ -119,7 +121,7 @@ double himmelblau(double* x) {
     return t1 + t2;
 }
 
-double f1(std::array<double, PARAMS> c, int params) {
+double f1(individual& c, int params) {
     // f1(0) = 0
     double s = 0.0;
     for (int i = 0; i < params; i++) {
@@ -189,7 +191,7 @@ double calcSqrt(double* c, int params) {
     return abs(t1);
 }
 
-double optimize(std::array<double, PARAMS> c, const int params) {
+double optimize(individual& c, const int params) {
     return f1(c, params);
 }
 
@@ -210,9 +212,9 @@ double** initBounds(int params, double low, double high) {
     return bounds;
 }
 
-std::array<std::array<double, PARAMS>, POPSIZE> initPopulation(const int popsize, double** bounds, const int params) {
+std::array<individual, POPSIZE> initPopulation(const int popsize, double** bounds, const int params) {
     // double** population = new double*[popsize];
-    std::array<std::array<double, PARAMS>, POPSIZE> population;
+    std::array<individual, POPSIZE> population;
     for (int i = 0; i < popsize; i++) {
         // population[i] = new double[params];
         for (int j = 0; j < params; j++) {
@@ -235,10 +237,10 @@ int main(int argc, const char * argv[]) {
     const int print = 1000;
     
     double** bounds = initBounds(params, -100.0, 100.0);
-    std::array<std::array<double, PARAMS>, POPSIZE> population = initPopulation(popsize, bounds, params);
+    std::array<individual, POPSIZE> population = initPopulation(popsize, bounds, params);
     double scores[popsize];
     double donor[params];
-    std::array<double, PARAMS> trial;
+    individual trial;
     
     std::ofstream xydata;
     xydata.open("/Users/phj/Desktop/data.txt");
@@ -263,10 +265,10 @@ int main(int argc, const char * argv[]) {
                 } while (idx == i); // Should check for candidates contains
                 candidates[j] = idx;
             }
-            std::array<double, PARAMS> x0 = population[candidates[0]];
-            std::array<double, PARAMS> x1 = population[candidates[1]];
-            std::array<double, PARAMS> x2 = population[candidates[2]];
-            std::array<double, PARAMS> xt = population[i];
+            individual x0 = population[candidates[0]];
+            individual x1 = population[candidates[1]];
+            individual x2 = population[candidates[2]];
+            individual xt = population[i];
             
             // Create donor
             for (int j = 0; j < params; j++) {
@@ -298,7 +300,7 @@ int main(int argc, const char * argv[]) {
             double genAvg = arraySum(scores, popsize) / popsize;
             int idxOfMin = arrayMinIndex(scores, popsize);
             double genBest = scores[idxOfMin];
-            std::array<double, PARAMS> genSolution = population[idxOfMin];
+            individual genSolution = population[idxOfMin];
             
             std::cout << "iteration " << g << std::endl;
             
