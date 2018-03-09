@@ -187,7 +187,7 @@ double calcSqrt(double* c, int params) {
 }
 
 double optimize(double* c, int params) {
-    return f2(c, params);
+    return f1(c, params);
 }
 
 void ensureBounds(double* vec, double** bounds, int params) {
@@ -207,7 +207,7 @@ double** initBounds(int params, double low, double high) {
     return bounds;
 }
 
-double** initPopulation(int popsize, double** bounds, int params) {
+double** initPopulation(const int popsize, double** bounds, int params) {
     double** population = new double*[popsize];
     for (int i = 0; i < popsize; i++) {
         population[i] = new double[params];
@@ -223,16 +223,16 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 100;
+    const int params = 10;
     const double scale = 0.3;
     const double crossover = 0.9;
-    const int popsize = 1000;
-    const int generations = 10000;
+    const int popsize = 100;
+    const long generations = 10000;
     const int print = 1000;
     
     double** bounds = initBounds(params, -100.0, 100.0);
     double** population = initPopulation(popsize, bounds, params);
-    double* scores = new double[popsize];
+    double scores[popsize];
     double donor[params];
     double trial[params];
     
@@ -245,7 +245,7 @@ int main(int argc, const char * argv[]) {
     }
     
     // For each generation
-    for (int g = 0; g < generations + 1; g++) {
+    for (long g = 0; g < generations + 1; g++) {
         
         // For each individual
         for (int i = 0; i < popsize; i++) {
@@ -313,6 +313,5 @@ int main(int argc, const char * argv[]) {
     }
     xydata.close();
     // Delete population
-    // Delete generationScores
     // Delete scores
 }
