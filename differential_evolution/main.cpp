@@ -10,9 +10,9 @@
 #include <cmath>
 #include <fstream>
 
-#define USE_XORSHIFT
+#define USE_XORSHIFT 1
 
-#ifdef USE_XORSHIFT
+#if USE_XORSHIFT == 1
 
 // https://stackoverflow.com/questions/23376925/generating-doubles-with-xorshift-generator
 uint32_t xor128() {
@@ -227,7 +227,7 @@ int main(int argc, const char * argv[]) {
     const double scale = 0.3;
     const double crossover = 0.9;
     const int popsize = 1000;
-    const long generations = 1000;
+    const long generations = 10000;
     const int print = 1000;
     
     double** bounds = initBounds(params, -100.0, 100.0);
