@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		CB001051204B3FC7003F027B /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB00104F204B3FC7003F027B /* helpers.cpp */; };
 		CB1A21BF2053FA0D00C8A395 /* RandomGenerators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB1A21BE2053FA0D00C8A395 /* RandomGenerators.cpp */; };
+		CB1A21C22053FB8100C8A395 /* ArrayHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB1A21C02053FB8100C8A395 /* ArrayHelpers.cpp */; };
+		CB1A21C52053FBE900C8A395 /* OptimizationProblems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB1A21C32053FBE900C8A395 /* OptimizationProblems.cpp */; };
 		CB723928204347FE002599EB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB723927204347FE002599EB /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +30,10 @@
 		CB00104F204B3FC7003F027B /* helpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
 		CB1A21BD2053FA0D00C8A395 /* RandomGenerators.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RandomGenerators.hpp; sourceTree = "<group>"; };
 		CB1A21BE2053FA0D00C8A395 /* RandomGenerators.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RandomGenerators.cpp; sourceTree = "<group>"; };
+		CB1A21C02053FB8100C8A395 /* ArrayHelpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArrayHelpers.cpp; sourceTree = "<group>"; };
+		CB1A21C12053FB8100C8A395 /* ArrayHelpers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArrayHelpers.hpp; sourceTree = "<group>"; };
+		CB1A21C32053FBE900C8A395 /* OptimizationProblems.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = OptimizationProblems.cpp; sourceTree = "<group>"; };
+		CB1A21C42053FBE900C8A395 /* OptimizationProblems.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = OptimizationProblems.hpp; sourceTree = "<group>"; };
 		CB723924204347FE002599EB /* differential_evolution */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = differential_evolution; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB723927204347FE002599EB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,6 +72,10 @@
 				CB1A21BD2053FA0D00C8A395 /* RandomGenerators.hpp */,
 				CB723927204347FE002599EB /* main.cpp */,
 				CB00104F204B3FC7003F027B /* helpers.cpp */,
+				CB1A21C02053FB8100C8A395 /* ArrayHelpers.cpp */,
+				CB1A21C12053FB8100C8A395 /* ArrayHelpers.hpp */,
+				CB1A21C32053FBE900C8A395 /* OptimizationProblems.cpp */,
+				CB1A21C42053FBE900C8A395 /* OptimizationProblems.hpp */,
 			);
 			path = differential_evolution;
 			sourceTree = "<group>";
@@ -130,6 +140,8 @@
 				CB723928204347FE002599EB /* main.cpp in Sources */,
 				CB1A21BF2053FA0D00C8A395 /* RandomGenerators.cpp in Sources */,
 				CB001051204B3FC7003F027B /* helpers.cpp in Sources */,
+				CB1A21C52053FBE900C8A395 /* OptimizationProblems.cpp in Sources */,
+				CB1A21C22053FB8100C8A395 /* ArrayHelpers.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
