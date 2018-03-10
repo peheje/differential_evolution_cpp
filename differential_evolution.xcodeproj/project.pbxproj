@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CB001051204B3FC7003F027B /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB00104F204B3FC7003F027B /* helpers.cpp */; };
+		CB1A21BF2053FA0D00C8A395 /* RandomGenerators.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB1A21BE2053FA0D00C8A395 /* RandomGenerators.cpp */; };
 		CB723928204347FE002599EB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB723927204347FE002599EB /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,8 @@
 
 /* Begin PBXFileReference section */
 		CB00104F204B3FC7003F027B /* helpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
+		CB1A21BD2053FA0D00C8A395 /* RandomGenerators.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RandomGenerators.hpp; sourceTree = "<group>"; };
+		CB1A21BE2053FA0D00C8A395 /* RandomGenerators.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RandomGenerators.cpp; sourceTree = "<group>"; };
 		CB723924204347FE002599EB /* differential_evolution */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = differential_evolution; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB723927204347FE002599EB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,6 +62,8 @@
 		CB723926204347FE002599EB /* differential_evolution */ = {
 			isa = PBXGroup;
 			children = (
+				CB1A21BE2053FA0D00C8A395 /* RandomGenerators.cpp */,
+				CB1A21BD2053FA0D00C8A395 /* RandomGenerators.hpp */,
 				CB723927204347FE002599EB /* main.cpp */,
 				CB00104F204B3FC7003F027B /* helpers.cpp */,
 			);
@@ -123,6 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB723928204347FE002599EB /* main.cpp in Sources */,
+				CB1A21BF2053FA0D00C8A395 /* RandomGenerators.cpp in Sources */,
 				CB001051204B3FC7003F027B /* helpers.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,7 +242,11 @@
 		CB72392C204347FE002599EB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = NO;
 				CODE_SIGN_STYLE = Automatic;
+				GCC_FAST_MATH = NO;
+				GCC_STRICT_ALIASING = YES;
+				LLVM_LTO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -244,8 +254,12 @@
 		CB72392D204347FE002599EB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_USE_OPTIMIZATION_PROFILE = NO;
 				CODE_SIGN_STYLE = Automatic;
+				GCC_FAST_MATH = NO;
 				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_STRICT_ALIASING = YES;
+				LLVM_LTO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
