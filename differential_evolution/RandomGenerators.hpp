@@ -9,7 +9,6 @@
 #ifndef RandomGenerators_hpp
 #define RandomGenerators_hpp
 
-double fRand(double min, double max);
-unsigned long iRand(unsigned long min, unsigned long max);
+#include <stdio.h>
 
 #endif /* RandomGenerators_hpp */
