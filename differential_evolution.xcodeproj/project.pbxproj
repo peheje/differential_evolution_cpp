@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		CB001051204B3FC7003F027B /* helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB00104F204B3FC7003F027B /* helpers.cpp */; };
 		CB723928204347FE002599EB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB723927204347FE002599EB /* main.cpp */; };
-		CB75E61A2053F19C0010C987 /* Xor128.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB75E6182053F19C0010C987 /* Xor128.cpp */; };
-		CB75E61E2053F3580010C987 /* Rand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB75E61C2053F3580010C987 /* Rand.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,11 +27,6 @@
 		CB00104F204B3FC7003F027B /* helpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = helpers.cpp; sourceTree = "<group>"; };
 		CB723924204347FE002599EB /* differential_evolution */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = differential_evolution; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB723927204347FE002599EB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		CB75E6142053F1080010C987 /* Rnd.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Rnd.hpp; sourceTree = "<group>"; };
-		CB75E6182053F19C0010C987 /* Xor128.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Xor128.cpp; sourceTree = "<group>"; };
-		CB75E6192053F19C0010C987 /* Xor128.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Xor128.hpp; sourceTree = "<group>"; };
-		CB75E61C2053F3580010C987 /* Rand.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Rand.cpp; sourceTree = "<group>"; };
-		CB75E61D2053F3580010C987 /* Rand.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Rand.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,11 +61,6 @@
 			children = (
 				CB723927204347FE002599EB /* main.cpp */,
 				CB00104F204B3FC7003F027B /* helpers.cpp */,
-				CB75E6142053F1080010C987 /* Rnd.hpp */,
-				CB75E6182053F19C0010C987 /* Xor128.cpp */,
-				CB75E6192053F19C0010C987 /* Xor128.hpp */,
-				CB75E61C2053F3580010C987 /* Rand.cpp */,
-				CB75E61D2053F3580010C987 /* Rand.hpp */,
 			);
 			path = differential_evolution;
 			sourceTree = "<group>";
@@ -135,8 +123,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB723928204347FE002599EB /* main.cpp in Sources */,
-				CB75E61A2053F19C0010C987 /* Xor128.cpp in Sources */,
-				CB75E61E2053F3580010C987 /* Rand.cpp in Sources */,
 				CB001051204B3FC7003F027B /* helpers.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
