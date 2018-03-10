@@ -223,11 +223,11 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand ((uint)time(NULL));
     
-    const int params = 10;
+    const int params = 100;
     const double scale = 0.3;
     const double crossover = 0.9;
-    const int popsize = 1000;
-    const long generations = 10000;
+    const int popsize = 100;
+    const long generations = 50000;
     const int print = 1000;
     
     double** bounds = initBounds(params, -100.0, 100.0);
