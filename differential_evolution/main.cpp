@@ -46,7 +46,7 @@ double fRand(double fMin, double fMax) {
     return fMin + f * (fMax - fMin);
 }
 
-int iRand(int min, int max) {
+unsigned long iRand(unsigned long min, unsigned long max) {
     return rand() % (max - min) + min;
 }
 
