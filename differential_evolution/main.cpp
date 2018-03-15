@@ -47,7 +47,7 @@ int main(int argc, const char * argv[]) {
     srand((uint)time(NULL));
     
     const int params = 1000;
-    const double mutate = 0.2;
+    const double mutate = 0.01;
     const double crossover = 0.9;
     const int popsize = 100;
     const long generations = 25000;
@@ -68,7 +68,7 @@ int main(int argc, const char * argv[]) {
     std::ofstream xydata;
     
     xydata.open(savepath);
-    xydata << "mutate " << mutate << std::endl;
+    xydata << "popsize " << popsize << std::endl;
     xydata.close();
     
     // Run initial generation scores
