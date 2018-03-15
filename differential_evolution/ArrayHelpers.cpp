@@ -33,13 +33,16 @@ double arraySum(double* arr, int d1) {
 }
 
 int arrayMinIndex(double* arr, int d1) {
-    int idx = -1;
-    double low = __DBL_MAX__;
-    for (int i = 0; i < d1; i++) {
+    if (d1 < 1) return 0;
+    
+    int idx = 0;
+    double low = arr[0];
+    for (int i = 1; i < d1; i++) {
         if (arr[i] < low) {
             low = arr[i];
             idx = i;
         }
     }
+    
     return idx;
 }

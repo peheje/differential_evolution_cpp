@@ -46,24 +46,30 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand((uint)time(NULL));
     
-    const int params = 100;
-    const double scale = 0.3;
+    const int params = 1000;
+    const double mutate = 0.2;
     const double crossover = 0.9;
-    const int popsize = 1000;
-    const long generations = 5000;
-    const int print = 1000;
+    const int popsize = 100;
+    const long generations = 25000;
+    const int print = 100;
+    const double boundfrom = -5.0;
+    const double boundTo = 5.0;
     
-    // Function to optimize
-    double (*optimizePtr)(double*, int) = f1;
-    
-    double** bounds = initBounds(params, -100.0, 100.0);
+    double** bounds = initBounds(params, boundfrom, boundTo);
     double** population = initPopulation(popsize, bounds, params);
     double scores[popsize];
     double donor[params];
     double trial[params];
     
+    // Function to optimize
+    double (*optimizePtr)(double*, int) = f2;
+    
+    const std::string savepath = "/Users/phj/Desktop/data2.txt";
     std::ofstream xydata;
-    xydata.open("/Users/phj/Desktop/data.txt");
+    
+    xydata.open(savepath);
+    xydata << "mutate " << mutate << std::endl;
+    xydata.close();
     
     // Run initial generation scores
     for (int i = 0; i < popsize; i++) {
@@ -90,7 +96,7 @@ int main(int argc, const char * argv[]) {
             
             // Create donor
             for (int j = 0; j < params; j++) {
-                donor[j] = x0[j] + (x1[j] - x2[j]) * scale;
+                donor[j] = x0[j] + (x1[j] - x2[j]) * mutate;
             }
             // ensureBounds(donor, bounds, params);
             
@@ -114,6 +120,7 @@ int main(int argc, const char * argv[]) {
         }
         
         if (g % print == 0) {
+            
             // Score keeping
             double genAvg = arraySum(scores, popsize) / popsize;
             int idxOfMin = arrayMinIndex(scores, popsize);
@@ -132,10 +139,11 @@ int main(int argc, const char * argv[]) {
             
             // Write to file
             std::string data = std::to_string(g) + " " + std::to_string(genAvg) + "\n";
+            xydata.open(savepath, std::ios_base::app);
             xydata << data;
+            xydata.close();
         }
     }
-    xydata.close();
     // Delete population
     // Delete scores
 }

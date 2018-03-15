@@ -9,7 +9,7 @@
 #include <cmath>
 #include "OptimizationProblems.hpp"
 
-double beale(double* x) {
+double beale(double* x, int params) {
     // Beale's function, use bounds=[(-4.5, 4.5),(-4.5, 4.5)], f(3,0.5)=0.
     double term1 = pow(1.500 - x[0] + x[0]*x[1], 2.0);
     double term2 = pow(2.250 - x[0] + x[0]*x[1]*x[1], 2.0);
@@ -17,21 +17,21 @@ double beale(double* x) {
     return term1 + term2 + term3;
 }
 
-double booth(double* x) {
+double booth(double* x, int params) {
     // f(1,3)=0
     double t1 = pow((x[0] + 2*x[1] - 7), 2.0);
     double t2 = pow(2*x[0] + x[1] - 5, 2.0);
     return t1 + t2;
 }
 
-double matyas(double* x) {
+double matyas(double* x, int params) {
     // f(0,0)=0
     double t1 = 0.26*(x[0]*x[0] + x[1]*x[1]);
     double t2 = 0.48*x[0]*x[1];
     return t1 - t2;
 }
 
-double himmelblau(double* x) {
+double himmelblau(double* x, int params) {
     // f(3,2)=0, f(-2.8051,3.1313)=0, f(-3.7793,-3.2831)=0, f(3.5844,-1.8481)=0
     double t1 = pow(x[0]*x[0] + x[1] - 11, 2.0);
     double t2 = pow(x[0] + x[1]*x[1] - 7, 2.0);
@@ -55,7 +55,7 @@ double f2(double* c, int params) {
         s += abs(c[i]);
         p *= c[i];
     }
-    return abs(s) + abs(p);
+    return abs(s + p);
 }
 
 double f3(double* c, int params) {
@@ -91,7 +91,7 @@ double f8(double* c, int params) {
     return abs(s);
 }
 
-double f17(double* c) {
+double f17(double* c, int params) {
     // f17(9.42, 2.47) = 0.398
     // -5 <= xi <= 15
     double x0 = c[0];
