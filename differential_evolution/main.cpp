@@ -13,10 +13,6 @@
 #include "ArrayHelpers.hpp"
 #include "OptimizationProblems.hpp"
 
-double optimize(double* c, int params) {
-    return f1(c, params);
-}
-
 void ensureBounds(double* vec, double** bounds, int params) {
     for (int i = 0; i < params; i++) {
         if (vec[i] < bounds[i][0]) vec[i] = bounds[i][0];
@@ -48,7 +44,7 @@ double** initPopulation(const int popsize, double** bounds, int params) {
 int main(int argc, const char * argv[]) {
     // Setup
     std::cout.precision(17);
-    srand ((uint)time(NULL));
+    srand((uint)time(NULL));
     
     const int params = 100;
     const double scale = 0.3;
@@ -56,6 +52,9 @@ int main(int argc, const char * argv[]) {
     const int popsize = 1000;
     const long generations = 5000;
     const int print = 1000;
+    
+    // Function to optimize
+    double (*optimizePtr)(double*, int) = f1;
     
     double** bounds = initBounds(params, -100.0, 100.0);
     double** population = initPopulation(popsize, bounds, params);
@@ -68,15 +67,13 @@ int main(int argc, const char * argv[]) {
     
     // Run initial generation scores
     for (int i = 0; i < popsize; i++) {
-        scores[i] = optimize(population[i], params);
+        scores[i] = optimizePtr(population[i], params);
     }
     
     // For each generation
     for (long g = 0; g < generations + 1; g++) {
-        
         // For each individual
         for (int i = 0; i < popsize; i++) {
-            
             // Get three others
             int candidates[3];
             for (int j = 0; j < 3; j++) {
@@ -107,7 +104,7 @@ int main(int argc, const char * argv[]) {
             }
             
             // Greedy pick best
-            double scoreTrial = optimize(trial, params);
+            double scoreTrial = optimizePtr(trial, params);
             double scoreTarget = scores[i];
             
             if (scoreTrial < scoreTarget) {
