@@ -50,15 +50,15 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand((uint)time(NULL));
     
-    const int params = 100;
+    const int params = 1000;
     const double mutate = 0.5;
     
     double crossover = 0.9;
-    const double ditherFrom = 0.8;
+    const double ditherFrom = 0.5;
     const double ditherTo = 1.0;
     
     const int popsize = 100;
-    const long generations = 1000;
+    const long generations = 10000;
     const int print = 100;
     
     const double boundFrom = -5.0;
