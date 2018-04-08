@@ -51,14 +51,14 @@ int main(int argc, const char * argv[]) {
     srand((uint)time(NULL));
     
     const int params = 100;
-    const double mutate = 0.02;
+    const double mutate = 0.5;
     
     double crossover = 0.9;
     const double ditherFrom = 0.8;
     const double ditherTo = 1.0;
     
-    const int popsize = 1000;
-    const long generations = 100000;
+    const int popsize = 100;
+    const long generations = 1000;
     const int print = 100;
     
     const double boundFrom = -5.0;
