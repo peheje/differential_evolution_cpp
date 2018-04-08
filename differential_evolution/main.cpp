@@ -9,9 +9,13 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
+#include <vector>
+#include <thread>
+#include <mutex>
 #include "RandomGenerators.hpp"
 #include "ArrayHelpers.hpp"
 #include "OptimizationProblems.hpp"
+#include "Timer.hpp"
 
 void ensureBounds(double* vec, double** bounds, int params) {
     for (int i = 0; i < params; i++) {
@@ -146,4 +150,5 @@ int main(int argc, const char * argv[]) {
     }
     // Delete population
     // Delete scores
+    return 0;
 }
