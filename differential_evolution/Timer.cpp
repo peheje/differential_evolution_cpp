@@ -9,7 +9,7 @@
 #include <iostream>
 #include "Timer.hpp"
 
-Timer::Timer() {
+Timer::Timer(std::string const& timerName) : name(timerName) {
     start = std::chrono::high_resolution_clock::now();
 }
 
@@ -17,5 +17,5 @@ Timer::~Timer() {
     end = std::chrono::high_resolution_clock::now();
     duration = end - start;
     float ms = duration.count() * 1000.0f;
-    std::cout << "Timer took " << ms << "ms" << std::endl;
+    std::cout << "'" << name << "'" << " timer took " << ms << "ms" << std::endl;
 }

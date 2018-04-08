@@ -50,23 +50,28 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand((uint)time(NULL));
     
-    const int params = 1000;
-    const double mutate = 0.01;
-    const double crossover = 0.9;
-    const int popsize = 100;
-    const long generations = 25000;
+    const int params = 100;
+    const double mutate = 0.02;
+    
+    double crossover = 0.9;
+    const double ditherFrom = 0.8;
+    const double ditherTo = 1.0;
+    
+    const int popsize = 1000;
+    const long generations = 100000;
     const int print = 100;
-    const double boundfrom = -5.0;
+    
+    const double boundFrom = -5.0;
     const double boundTo = 5.0;
     
-    double** bounds = initBounds(params, boundfrom, boundTo);
+    double** bounds = initBounds(params, boundFrom, boundTo);
     double** population = initPopulation(popsize, bounds, params);
     double scores[popsize];
     double donor[params];
     double trial[params];
     
     // Function to optimize
-    double (*optimizePtr)(double*, int) = f2;
+    double (*optimizePtr)(double*, int) = f1;
     
     const std::string savepath = "/Users/phj/Desktop/data2.txt";
     std::ofstream xydata;
@@ -76,12 +81,17 @@ int main(int argc, const char * argv[]) {
     xydata.close();
     
     // Run initial generation scores
-    for (int i = 0; i < popsize; i++) {
+    for (int i = 0; i < popsize; i++)
         scores[i] = optimizePtr(population[i], params);
-    }
     
     // For each generation
     for (long g = 0; g < generations + 1; g++) {
+        
+        // Timer generation("generation");
+        
+        // Dither
+        crossover = fRand(ditherFrom, ditherTo);
+        
         // For each individual
         for (int i = 0; i < popsize; i++) {
             // Get three others
@@ -99,19 +109,14 @@ int main(int argc, const char * argv[]) {
             double* xt = population[i];
             
             // Create donor
-            for (int j = 0; j < params; j++) {
+            for (int j = 0; j < params; j++)
                 donor[j] = x0[j] + (x1[j] - x2[j]) * mutate;
-            }
-            // ensureBounds(donor, bounds, params);
+            
+            ensureBounds(donor, bounds, params);
             
             // Create trial
-            for (int j = 0; j < params; j++) {
-                if (fRand(0.0, 1.0) < crossover) {
-                    trial[j] = donor[j];
-                } else {
-                    trial[j] = xt[j];
-                }
-            }
+            for (int j = 0; j < params; j++)
+                trial[j] = fRand(0.0, 1.0) < crossover ? donor[j] : xt[j];
             
             // Greedy pick best
             double scoreTrial = optimizePtr(trial, params);

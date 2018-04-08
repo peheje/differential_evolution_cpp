@@ -10,11 +10,13 @@
 #define Timer_hpp
 
 #include <chrono>
+#include <string>
 
 struct Timer {
     std::chrono::time_point<std::chrono::steady_clock> start, end;
     std::chrono::duration<float> duration;
-    Timer();
+    std::string name;
+    Timer(std::string const& name);
     ~Timer();
 };
 
