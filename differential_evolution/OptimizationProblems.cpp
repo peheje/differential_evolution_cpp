@@ -101,7 +101,7 @@ double f17(double* c, int params) {
     return abs(t1 + t2);
 }
 
-double calcSqrt(double* c, int params) {
+double calcSqrt2(double* c, int params) {
     // sqrt(2), x*x == 2 => x*x-2 = 0
     double x = c[0];
     double t1 = x*x - 2;

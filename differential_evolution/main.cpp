@@ -50,9 +50,11 @@ int main(int argc, const char * argv[]) {
     std::cout.precision(17);
     srand((uint)time(NULL));
     
-    const int params = 1000;
-    const double mutate = 0.5;
+    // Function to optimize
+    double (*optimizePtr)(double*, int) = calcSqrt2;
+    const int params = 1;
     
+    const double mutate = 0.5;
     double crossover = 0.9;
     const double ditherFrom = 0.5;
     const double ditherTo = 1.0;
@@ -69,9 +71,6 @@ int main(int argc, const char * argv[]) {
     double scores[popsize];
     double donor[params];
     double trial[params];
-    
-    // Function to optimize
-    double (*optimizePtr)(double*, int) = f1;
     
     const std::string savepath = "/Users/phj/Desktop/data2.txt";
     std::ofstream xydata;
