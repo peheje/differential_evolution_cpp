@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 
-paths = ["/Users/phj/Desktop/data1.txt",
-         "/Users/phj/Desktop/data2.txt"]
+paths = ["/Users/phj/Desktop/data0.txt", "/Users/phj/Desktop/data1.txt"]
 
 colors = ["r", "b", "g"]
 plots = []
@@ -29,5 +28,5 @@ for color, path in zip(colors, paths):
     plots.append(item)
 
 plt.yscale('log')
-plt.legend(handles=plots)
+# plt.legend(handles=plots)
 plt.show()

@@ -9,13 +9,13 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
-#include <vector>
 #include <thread>
 #include <mutex>
 #include "RandomGenerators.hpp"
 #include "ArrayHelpers.hpp"
 #include "OptimizationProblems.hpp"
 #include "Timer.hpp"
+#include "List.hpp"
 
 void ensureBounds(double* vec, double** bounds, int params) {
     for (int i = 0; i < params; i++) {
@@ -38,33 +38,33 @@ double** initPopulation(const int popsize, double** bounds, int params) {
     double** population = new double*[popsize];
     for (int i = 0; i < popsize; i++) {
         population[i] = new double[params];
-        for (int j = 0; j < params; j++) {
+        for (int j = 0; j < params; j++)
             population[i][j] = fRand(bounds[j][0], bounds[j][1]);
-        }
     }
     return population;
 }
 
 int main(int argc, const char * argv[]) {
+    
     // Setup
     std::cout.precision(17);
     srand((uint)time(NULL));
     
     // Function to optimize
-    double (*optimizePtr)(double*, int) = calcSqrt2;
-    const int params = 1;
+    double (*optimizePtr)(double*, int) = lol2;
+    const int params = 2;
     
     const double mutate = 0.5;
     double crossover = 0.9;
     const double ditherFrom = 0.5;
     const double ditherTo = 1.0;
     
-    const int popsize = 100;
+    const int popsize = 1000;
     const long generations = 10000;
-    const int print = 100;
+    const int print = 1000;
     
-    const double boundFrom = -5.0;
-    const double boundTo = 5.0;
+    const double boundFrom = 0.0;
+    const double boundTo = 100;
     
     double** bounds = initBounds(params, boundFrom, boundTo);
     double** population = initPopulation(popsize, bounds, params);
@@ -72,11 +72,11 @@ int main(int argc, const char * argv[]) {
     double donor[params];
     double trial[params];
     
-    const std::string savepath = "/Users/phj/Desktop/data2.txt";
+    const std::string savepath = "/Users/phj/Desktop/data0.txt";
     std::ofstream xydata;
     
     xydata.open(savepath);
-    xydata << "popsize " << popsize << std::endl;
+    xydata << "dither " << popsize << std::endl;
     xydata.close();
     
     // Run initial generation scores
@@ -138,7 +138,7 @@ int main(int argc, const char * argv[]) {
             std::cout << "iteration " << g << std::endl;
             
             if (g == generations) {
-                std::cout << "solution "; printArray(genSolution, params, true);
+                std::cout << "solution: " << std::endl; printArray(genSolution, params, true);
             }
             
             std::cout << "average " << genAvg << std::endl;

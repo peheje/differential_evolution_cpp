@@ -107,3 +107,36 @@ double calcSqrt2(double* c, int params) {
     double t1 = x*x - 2;
     return abs(t1);
 }
+
+/*
+ In League of Legends, a player's Effective Health when defending against physical damage is given by E=H(100+A)100, where H is health and A is armor. Health costs 2.5 gold per unit, and Armor costs 18 gold per unit. You have 3600 gold, and you need to optimize the effectiveness E of your health and armor to survive as long as possible against the enemy team's attacks. How much of each should you buy?
+ 
+ You do not spend equal money on A and H: E=3H−1720H2 so the maximum is at H=1080, plug back in for A=50.
+ */
+double lol1(double* c, int params) {
+    double health = c[0];
+    double armor = c[1];
+    double effectiveHealth = (health*(100+armor))/100;
+    if (health*2.5 + armor*18 > 3600)
+        return 1;
+    return 1.0/effectiveHealth;
+}
+
+/*
+ Ten minutes into the game, you have 1080 health and 10 armor. You have only 720 gold to spend, and again Health costs 2.5 gold per unit while Armor costs 18 gold per unit. Again the goal is to maximize the effectiveness E. Notice that you don't want to maximize the effectiveness of what you purchase -- you want to maximize the effectiveness E of your resulting health and armor. How much of each should you buy?
+ */
+double lol2(double* c, int params) {
+    double health = c[0];
+    double armor = c[1];
+    
+    double currentHealth = health + 1080;
+    double currentArmor = armor + 10;
+    
+    double effectiveHealth = (currentHealth*(100+currentArmor))/100;
+    if (health*2.5 + armor*18 > 720)
+        return 100;
+    return 1.0/effectiveHealth;
+}
+
+
+
