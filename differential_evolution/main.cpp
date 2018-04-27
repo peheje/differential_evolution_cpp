@@ -51,7 +51,7 @@ int main(int argc, const char * argv[]) {
     srand((uint)time(NULL));
     
     // Function to optimize
-    double (*optimizePtr)(double*, int) = lol2;
+    double (*optimizePtr)(double*, int) = lol3;
     const int params = 2;
     
     const double mutate = 0.5;

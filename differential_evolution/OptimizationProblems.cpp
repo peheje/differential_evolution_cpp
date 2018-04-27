@@ -118,12 +118,14 @@ double lol1(double* c, int params) {
     double armor = c[1];
     double effectiveHealth = (health*(100+armor))/100;
     if (health*2.5 + armor*18 > 3600)
-        return 1;
+        return 100;
     return 1.0/effectiveHealth;
 }
 
 /*
  Ten minutes into the game, you have 1080 health and 10 armor. You have only 720 gold to spend, and again Health costs 2.5 gold per unit while Armor costs 18 gold per unit. Again the goal is to maximize the effectiveness E. Notice that you don't want to maximize the effectiveness of what you purchase -- you want to maximize the effectiveness E of your resulting health and armor. How much of each should you buy?
+ 
+ One way to do this is to realize from number 1 that we know an optimal configuration is H=1080 and A=50, so right now we have way too much health and not enough armor. The answer to this is that we should spend all the money on 40 armor, to get exactly back to the optimized answer to #1.
  */
 double lol2(double* c, int params) {
     double health = c[0];
@@ -138,5 +140,21 @@ double lol2(double* c, int params) {
     return 1.0/effectiveHealth;
 }
 
-
+/*
+ Thirty minutes into the game, you have 2000 health and 50 armor. You have 1800 gold to spend, and again Health costs approximately 2.5 gold per unit while Armor costs approximately 18 gold per unit. Again the goal is to maximize the effectiveness E of your resulting health and armor. How much of each should you buy?
+ 
+ If H and A are the amount they plan to buy, the effectiveness is E=(H+2000)(100+(50+A))100 since they started with 2000 and 50 respectively. The critical point appears at H = -100, so the maximum actually occurs at one of the endpoints, not at the critical point at all. Again the player should spend all the money on armor.
+ */
+double lol3(double* c, int params) {
+    double health = c[0];
+    double armor = c[1];
+    
+    double currentHealth = health + 2000;
+    double currentArmor = armor + 50;
+    
+    double effectiveHealth = (currentHealth*(100+currentArmor))/100;
+    if (health*2.5 + armor*18 > 1800)
+        return 100;
+    return 1.0/effectiveHealth;
+}
 

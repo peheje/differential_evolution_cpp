@@ -22,5 +22,6 @@ double f17(double* c, int params);
 double calcSqrt2(double* c, int params);
 double lol1(double* c, int params);
 double lol2(double* c, int params);
+double lol3(double* c, int params);
 
 #endif /* OptimizationProblems_hpp */
