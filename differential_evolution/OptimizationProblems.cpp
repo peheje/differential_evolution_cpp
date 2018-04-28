@@ -7,6 +7,7 @@
 //
 
 #include <cmath>
+#include <vector>
 #include "OptimizationProblems.hpp"
 
 double beale(double* x, int params) {
@@ -145,7 +146,7 @@ double lol2(double* c, int params) {
  
  If H and A are the amount they plan to buy, the effectiveness is E=(H+2000)(100+(50+A))100 since they started with 2000 and 50 respectively. The critical point appears at H = -100, so the maximum actually occurs at one of the endpoints, not at the critical point at all. Again the player should spend all the money on armor.
  */
-double lol3(double* c, int params) {
+double lol3(std::vector<double> c, int params) {
     double health = c[0];
     double armor = c[1];
     

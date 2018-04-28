@@ -11,6 +11,7 @@
 #include <fstream>
 #include <thread>
 #include <mutex>
+#include <vector>
 #include "RandomGenerators.hpp"
 #include "ArrayHelpers.hpp"
 #include "OptimizationProblems.hpp"
@@ -51,7 +52,7 @@ int main(int argc, const char * argv[]) {
     srand((uint)time(NULL));
     
     // Function to optimize
-    double (*optimizePtr)(double*, int) = lol3;
+    double (*optimizePtr)(std::vector<double>, int) = lol3;
     const int params = 2;
     
     const double mutate = 0.5;
@@ -59,7 +60,7 @@ int main(int argc, const char * argv[]) {
     const double ditherFrom = 0.5;
     const double ditherTo = 1.0;
     
-    const int popsize = 1000;
+    const int popsize = 10;
     const long generations = 10000;
     const int print = 1000;
     
@@ -67,10 +68,20 @@ int main(int argc, const char * argv[]) {
     const double boundTo = 100;
     
     double** bounds = initBounds(params, boundFrom, boundTo);
-    double** population = initPopulation(popsize, bounds, params);
+    
+    std::vector<std::vector<double>> population;
+    population.resize(popsize);
+    for (auto& x : population) {
+        x.resize(params);
+        for (size_t i = 0; i < params; i++)
+            x[i] = fRand(-100.0, 100.0);
+    }
+    
+    
     double scores[popsize];
     double donor[params];
-    double trial[params];
+    std::vector<double> trial;
+    trial.reserve(params);
     
     const std::string savepath = "/Users/phj/Desktop/data0.txt";
     std::ofstream xydata;
@@ -102,10 +113,10 @@ int main(int argc, const char * argv[]) {
                 } while (idx == i); // Should check for candidates contains
                 candidates[j] = idx;
             }
-            double* x0 = population[candidates[0]];
-            double* x1 = population[candidates[1]];
-            double* x2 = population[candidates[2]];
-            double* xt = population[i];
+            std::vector<double> x0 = population[candidates[0]];
+            std::vector<double> x1 = population[candidates[1]];
+            std::vector<double> x2 = population[candidates[2]];
+            std::vector<double> xt = population[i];
             
             // Create donor
             for (int j = 0; j < params; j++)
@@ -133,12 +144,15 @@ int main(int argc, const char * argv[]) {
             double genAvg = arraySum(scores, popsize) / popsize;
             int idxOfMin = arrayMinIndex(scores, popsize);
             double genBest = scores[idxOfMin];
-            double* genSolution = population[idxOfMin];
+            std::vector<double> genSolution = population[idxOfMin];
             
             std::cout << "iteration " << g << std::endl;
             
             if (g == generations) {
-                std::cout << "solution: " << std::endl; printArray(genSolution, params, true);
+                std::cout << "solution: " << std::endl;
+                for (auto& x : genSolution) {
+                    std::cout << x << std::endl;
+                }
             }
             
             std::cout << "average " << genAvg << std::endl;
