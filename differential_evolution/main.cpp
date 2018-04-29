@@ -9,8 +9,6 @@
 #include <iostream>
 #include <cmath>
 #include <fstream>
-#include <thread>
-#include <mutex>
 #include "RandomGenerators.hpp"
 #include "ArrayHelpers.hpp"
 #include "OptimizationProblems.hpp"
@@ -51,7 +49,7 @@ int main(int argc, const char * argv[]) {
     srand((uint)time(NULL));
     
     // Function to optimize
-    double (*optimizePtr)(double*, int) = lol3;
+    double (*optimizePtr)(double*, int) = booth;
     const int params = 2;
     
     const double mutate = 0.5;
@@ -59,9 +57,9 @@ int main(int argc, const char * argv[]) {
     const double ditherFrom = 0.5;
     const double ditherTo = 1.0;
     
-    const int popsize = 1000;
-    const long generations = 10000;
-    const int print = 1000;
+    const int popsize = 100;
+    const long generations = 100000;
+    const int print = 10000;
     
     const double boundFrom = 0.0;
     const double boundTo = 100;
